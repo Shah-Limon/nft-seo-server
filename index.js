@@ -29,6 +29,7 @@ async function run() {
     const packageCollections = client.db("seoWebsite").collection("packages");
     const orderCollections = client.db("seoWebsite").collection("orders");
     const paypalEmailCollections = client.db("seoWebsite").collection("email");
+    const GeneralCollections = client.db("seoWebsite").collection("general");
 
     /* Seo site post */
 
@@ -219,6 +220,75 @@ async function run() {
     });
 
     /* payment */
+
+
+        /* general Setting */
+
+        app.post("/add-logo", async (req, res) => {
+          const logo = req.body;
+          const result = await GeneralCollections.insertOne(logo);
+          res.send(result);
+        });
+    
+        app.get("/logo", async (req, res) => {
+          const query = {};
+          const cursor = GeneralCollections.find(query);
+          const logo = await cursor.toArray();
+          res.send(logo);
+        });
+        app.get("/logo/:id", async (req, res) => {
+          const query = {};
+          const cursor = GeneralCollections.find(query);
+          const logo = await cursor.toArray();
+          res.send(logo);
+        });
+    
+        app.put("/logo/:id", async (req, res) => {
+          const id = req.params.id;
+          const updateData = req.body;
+          const filter = { _id: new ObjectId(id) };
+          const options = { upsert: true };
+          const updatedDoc = {
+            $set: {
+              logo: updateData.logo,
+            },
+          };
+    
+          const result = await GeneralCollections.updateOne(
+            filter,
+            updatedDoc,
+            options
+          );
+          res.send(result);
+        });
+    
+        /* payment */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   } finally {
   }
 }
