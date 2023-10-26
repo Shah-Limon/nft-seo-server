@@ -9,9 +9,8 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// const uri = process.env.MONGO_URI;
-const uri =
-  "mongodb+srv://ntfseo:ntfseopass@nftseo.e1zbadu.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGO_URI;
+// const uri ="mongodb+srv://ntfseo:ntfseopass@nftseo.e1zbadu.mongodb.net/?retryWrites=true&w=majority";
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -30,6 +29,10 @@ async function run() {
     const orderCollections = client.db("seoWebsite").collection("orders");
     const paypalEmailCollections = client.db("seoWebsite").collection("email");
     const GeneralCollections = client.db("seoWebsite").collection("general");
+    const AboutUsOptionCollections = client.db("seoWebsite").collection("AboutUsOption");
+    const BannerOptionCollections = client.db("seoWebsite").collection("Banner");
+    const SpecialityOptionCollections = client.db("seoWebsite").collection("Speciality");
+    const WhyChooseOptionCollections = client.db("seoWebsite").collection("WhyChooseOption");
 
     /* Seo site post */
 
@@ -266,6 +269,210 @@ async function run() {
 
 
 
+
+        /* About Us Option Setting */
+
+        app.post("/add-about", async (req, res) => {
+          const about = req.body;
+          const result = await AboutUsOptionCollections.insertOne(about);
+          res.send(result);
+        });
+    
+        app.get("/about", async (req, res) => {
+          const query = {};
+          const cursor = AboutUsOptionCollections.find(query);
+          const about = await cursor.toArray();
+          res.send(about);
+        });
+        app.get("/about/:id", async (req, res) => {
+          const query = {};
+          const cursor = AboutUsOptionCollections.find(query);
+          const about = await cursor.toArray();
+          res.send(about);
+        });
+    
+        app.put("/edit-about/:id", async (req, res) => {
+          const id = req.params.id;
+          const updateAbout = req.body;
+          const filter = { _id: new ObjectId(id) };
+          const options = { upsert: true };
+          const updatedDoc = {
+            $set: {
+              img: updateAbout.img,
+              title: updateAbout.title,
+              subText: updateAbout.subText,
+              btnText: updateAbout.btnText,
+              btnUrl: updateAbout.btnUrl,
+            },
+          };
+    
+          const result = await AboutUsOptionCollections.updateOne(
+            filter,
+            updatedDoc,
+            options
+          );
+          res.send(result);
+        });
+    
+        /* Banner area */
+
+
+        app.post("/add-banner", async (req, res) => {
+          const banner = req.body;
+          const result = await BannerOptionCollections.insertOne(banner);
+          res.send(result);
+        });
+    
+        app.get("/banner", async (req, res) => {
+          const query = {};
+          const cursor = BannerOptionCollections.find(query);
+          const banner = await cursor.toArray();
+          res.send(banner);
+        });
+        app.get("/banner/:id", async (req, res) => {
+          const query = {};
+          const cursor = BannerOptionCollections.find(query);
+          const banner = await cursor.toArray();
+          res.send(banner);
+        });
+    
+        app.put("/edit-banner/:id", async (req, res) => {
+          const id = req.params.id;
+          const updateBanner = req.body;
+          const filter = { _id: new ObjectId(id) };
+          const options = { upsert: true };
+          const updatedDoc = {
+            $set: {
+              bannerToptext: updateBanner.bannerToptext,
+              bannerHeadingText1: updateBanner.bannerHeadingText1,
+              bannerHeadingText2: updateBanner.bannerHeadingText2,
+              typingHeading1: updateBanner.typingHeading1,
+              typingHeading2: updateBanner.typingHeading2,
+              typingHeading3: updateBanner.typingHeading3,
+              bannertext: updateBanner.bannertext,
+            },
+          };
+    
+          const result = await BannerOptionCollections.updateOne(
+            filter,
+            updatedDoc,
+            options
+          );
+          res.send(result);
+        });
+    
+        /* end */
+
+
+
+        /* Our speciality area */
+
+
+        app.post("/add-speciality", async (req, res) => {
+          const speciality = req.body;
+          const result = await SpecialityOptionCollections.insertOne(speciality);
+          res.send(result);
+        });
+    
+        app.get("/speciality", async (req, res) => {
+          const query = {};
+          const cursor = SpecialityOptionCollections.find(query);
+          const speciality = await cursor.toArray();
+          res.send(speciality);
+        });
+        app.get("/speciality/:id", async (req, res) => {
+          const query = {};
+          const cursor = SpecialityOptionCollections.find(query);
+          const speciality = await cursor.toArray();
+          res.send(speciality);
+        });
+    
+        app.put("/edit-speciality/:id", async (req, res) => {
+          const id = req.params.id;
+          const updateSpeciality = req.body;
+          const filter = { _id: new ObjectId(id) };
+          const options = { upsert: true };
+          const updatedDoc = {
+            $set: {
+              headingTitleOne: updateSpeciality.headingTitleOne,
+              headingTitleTwo: updateSpeciality.headingTitleTwo,
+              subText: updateSpeciality.subText,
+              cardTitleOne: updateSpeciality.cardTitleOne,
+              cardDescriptionOne: updateSpeciality.cardDescriptionOne,
+              cardTitleTwo: updateSpeciality.cardTitleTwo,
+              cardDescriptionTwo: updateSpeciality.cardDescriptionTwo,
+              cardTitleThree: updateSpeciality.cardTitleThree,
+              cardDescriptionThree: updateSpeciality.cardDescriptionThree,
+              cardTitleFour: updateSpeciality.cardTitleFour,
+              cardDescriptionFour: updateSpeciality.cardDescriptionFour,
+            },
+          };
+    
+          const result = await SpecialityOptionCollections.updateOne(
+            filter,
+            updatedDoc,
+            options
+          );
+          res.send(result);
+        });
+    
+        /* end */
+        
+
+                /* Why  choose area */
+
+
+                app.post("/add-why", async (req, res) => {
+                  const choose = req.body;
+                  const result = await WhyChooseOptionCollections.insertOne(choose);
+                  res.send(result);
+                });
+            
+                app.get("/why-choose", async (req, res) => {
+                  const query = {};
+                  const cursor = WhyChooseOptionCollections.find(query);
+                  const choose = await cursor.toArray();
+                  res.send(choose);
+                });
+                app.get("/why-choose/:id", async (req, res) => {
+                  const query = {};
+                  const cursor = WhyChooseOptionCollections.find(query);
+                  const choose = await cursor.toArray();
+                  res.send(choose);
+                });
+            
+                app.put("/edit-why-choose/:id", async (req, res) => {
+                  const id = req.params.id;
+                  const updateChoose = req.body;
+                  const filter = { _id: new ObjectId(id) };
+                  const options = { upsert: true };
+                  const updatedDoc = {
+                    $set: {
+                      img: updateChoose.img,
+                      whyToptext: updateChoose.whyToptext,
+                      bannerHeadingText1: updateChoose.bannerHeadingText1,
+                      bannerHeadingText2: updateChoose.bannerHeadingText2,
+                      cardTitleOne: updateChoose.cardTitleOne,
+                      cardDescOne: updateChoose.cardDescOne,
+                      cardTitleTwo: updateChoose.cardTitleTwo,
+                      cardDescTwo: updateChoose.cardDescTwo,
+                      cardTitleThree: updateChoose.cardTitleThree,
+                      cardDescThree: updateChoose.cardDescThree,
+                      cardTitleFour: updateChoose.cardTitleFour,
+                      cardDescFour: updateChoose.cardDescFour,
+                     
+                    },
+                  };
+            
+                  const result = await WhyChooseOptionCollections.updateOne(
+                    filter,
+                    updatedDoc,
+                    options
+                  );
+                  res.send(result);
+                });
+            
+                /* end */
 
 
 
