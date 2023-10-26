@@ -22,9 +22,7 @@ async function run() {
   try {
     await client.connect();
     /* Seo site collection */
-    const websiteCollections = client
-      .db("seoWebsite")
-      .collection("websiteList");
+    const websiteCollections = client.db("seoWebsite").collection("websiteList");
     const packageCollections = client.db("seoWebsite").collection("packages");
     const orderCollections = client.db("seoWebsite").collection("orders");
     const paypalEmailCollections = client.db("seoWebsite").collection("email");
@@ -33,6 +31,9 @@ async function run() {
     const BannerOptionCollections = client.db("seoWebsite").collection("Banner");
     const SpecialityOptionCollections = client.db("seoWebsite").collection("Speciality");
     const WhyChooseOptionCollections = client.db("seoWebsite").collection("WhyChooseOption");
+    const RoadMapOptionCollections = client.db("seoWebsite").collection("roadMap");
+    const TeamOptionCollections = client.db("seoWebsite").collection("team");
+    const TeamTitleOptionCollections = client.db("seoWebsite").collection("teamTitle");
 
     /* Seo site post */
 
@@ -474,13 +475,165 @@ async function run() {
             
                 /* end */
 
+/* Road Map area */
+
+
+app.post("/add-road", async (req, res) => {
+  const road = req.body;
+  const result = await RoadMapOptionCollections.insertOne(road);
+  res.send(result);
+});
+
+app.get("/road", async (req, res) => {
+  const query = {};
+  const cursor = RoadMapOptionCollections.find(query);
+  const road = await cursor.toArray();
+  res.send(road);
+});
+app.get("/road/:id", async (req, res) => {
+  const query = {};
+  const cursor = RoadMapOptionCollections.find(query);
+  const road = await cursor.toArray();
+  res.send(road);
+});
+
+app.put("/edit-road/:id", async (req, res) => {
+  const id = req.params.id;
+  const updateRoad = req.body;
+  const filter = { _id: new ObjectId(id) };
+  const options = { upsert: true };
+  const updatedDoc = {
+    $set: {
+      titleToptext: updateRoad.titleToptext,
+      bannerHeadingText1: updateRoad.bannerHeadingText1,
+      bannerHeadingText2: updateRoad.bannerHeadingText2,
+      cardDateOne: updateRoad.cardDateOne,
+      cardTitleOne: updateRoad.cardTitleOne,
+      cardDescOne: updateRoad.cardDescOne,
+      cardDateTwo: updateRoad.cardDateTwo,
+      cardTitleTwo: updateRoad.cardTitleTwo,
+      cardDescTwo: updateRoad.cardDescTwo,
+      cardDateThree: updateRoad.cardDateThree,
+      cardTitleThree: updateRoad.cardTitleThree,
+      cardDescThree: updateRoad.cardDescThree,
+      cardDateFour: updateRoad.cardDateFour,
+      cardTitleFour: updateRoad.cardTitleFour,
+      cardDescFour: updateRoad.cardDescFour,
+      cardDateFive: updateRoad.cardDateFive,
+      cardTitleFive: updateRoad.cardTitleFive,
+      cardDescFive: updateRoad.cardDescFive,
+      
+     
+    },
+  };
+
+  const result = await RoadMapOptionCollections.updateOne(
+    filter,
+    updatedDoc,
+    options
+  );
+  res.send(result);
+});
+
+/* end */
 
 
 
 
 
+    /* Team Members */
+
+    app.post("/add-team", async (req, res) => {
+      const team = req.body;
+      const result = await TeamOptionCollections.insertOne(team);
+      res.send(result);
+    });
+
+    app.get("/teams", async (req, res) => {
+      const query = {};
+      const cursor = TeamOptionCollections.find(query);
+      const team = await cursor.toArray();
+      res.send(team);
+    });
+    app.get("/team/:id", async (req, res) => {
+      const query = {};
+      const cursor = TeamOptionCollections.find(query);
+      const team = await cursor.toArray();
+      res.send(team);
+    });
+
+    app.put("/team/:id", async (req, res) => {
+      const id = req.params.id;
+      const team = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          personName: team.personName,
+          personImg: team.personImg,
+          personTitle: team.personTitle,
+          facebook: team.facebook,
+          twitter: team.twitter,
+        },
+      };
+
+      const result = await TeamOptionCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
+    /* team */
+
+/* Team area Title */
 
 
+app.post("/add-team-title", async (req, res) => {
+  const teamTitle = req.body;
+  const result = await TeamTitleOptionCollections.insertOne(teamTitle);
+  res.send(result);
+});
+
+app.get("/team-title", async (req, res) => {
+  const query = {};
+  const cursor = TeamTitleOptionCollections.find(query);
+  const teamTitle = await cursor.toArray();
+  res.send(teamTitle);
+});
+app.get("/team-title/:id", async (req, res) => {
+  const query = {};
+  const cursor = TeamTitleOptionCollections.find(query);
+  const teamTitle = await cursor.toArray();
+  res.send(teamTitle);
+});
+
+app.put("/edit-team-title/:id", async (req, res) => {
+  const id = req.params.id;
+  const updateTeamTitle = req.body;
+  const filter = { _id: new ObjectId(id) };
+  const options = { upsert: true };
+  const updatedDoc = {
+    $set: {
+      titleTopText: updateTeamTitle.titleTopText,
+      TitleOne: updateTeamTitle.TitleOne,
+      titleTwo: updateTeamTitle.titleTwo,
+      
+      
+     
+    },
+  };
+
+  const result = await TeamTitleOptionCollections.updateOne(
+    filter,
+    updatedDoc,
+    options
+  );
+  res.send(result);
+});
+
+/* end */
 
 
 
