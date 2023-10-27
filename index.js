@@ -38,6 +38,8 @@ async function run() {
     const TestimonialTitleOptionCollections = client.db("seoWebsite").collection("testimonialsTitle");
     const FaqsOptionCollections = client.db("seoWebsite").collection("faqs");
     const FaqsTitleCollections = client.db("seoWebsite").collection("faqsTitle");
+    const FooterCollections = client.db("seoWebsite").collection("footer");
+    const FooterLinkCollections = client.db("seoWebsite").collection("footerLink");
 
     /* Seo site post */
 
@@ -860,6 +862,115 @@ app.put("/edit-team-title/:id", async (req, res) => {
 
     /* faqs */
 
+/* footer area */
+
+
+    
+    app.post("/footer-social", async (req, res) => {
+      const footerSocial = req.body;
+      const result = await FooterCollections.insertOne(footerSocial);
+      res.send(result);
+    });
+
+    app.get("/footer-social", async (req, res) => {
+      const query = {};
+      const cursor = FooterCollections.find(query);
+      const footerSocial = await cursor.toArray();
+      res.send(footerSocial);
+    });
+    
+
+    app.get("/footer-social/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const footerSocial = await FooterCollections.findOne(query); // Use findOne to get a single testimonial
+      res.send(footerSocial);
+    });
+    
+    
+    
+
+    app.put("/footer-social/:id", async (req, res) => {
+      const id = req.params.id;
+      const footerSocial = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          facebook: footerSocial.facebook,
+          twitter: footerSocial.twitter,
+          instragram: footerSocial.instragram,
+          youtube: footerSocial.youtube,
+          
+        },
+      };
+
+      const result = await FooterCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
+    
+/* footer area end */
+/* footer Links */
+
+
+    
+app.post("/footer-link", async (req, res) => {
+  const footerLink = req.body;
+  const result = await FooterLinkCollections.insertOne(footerLink);
+  res.send(result);
+});
+
+app.get("/footer-links", async (req, res) => {
+  const query = {};
+  const cursor = FooterLinkCollections.find(query);
+  const footerLink = await cursor.toArray();
+  res.send(footerLink);
+});
+
+
+app.get("/footer-link/:id", async (req, res) => {
+  const id = req.params.id; // Get the ID from the URL
+  const query = { _id: new ObjectId(id) }; // Filter by ID
+  const footerLink = await FooterLinkCollections.findOne(query); // Use findOne to get a single testimonial
+  res.send(footerLink);
+});
+
+
+
+
+app.put("/footer-link/:id", async (req, res) => {
+  const id = req.params.id;
+  const footerLink = req.body;
+  const filter = { _id: new ObjectId(id) };
+  const options = { upsert: true };
+  const updatedDoc = {
+    $set: {
+      linkOne: footerLink.linkOne,
+      linkTwo: footerLink.linkTwo,
+      linkThree: footerLink.linkThree,
+      linkFour: footerLink.linkFour,
+      linkFive: footerLink.linkFive,
+      CopyRight: footerLink.CopyRight,
+    
+      
+    },
+  };
+
+  const result = await FooterLinkCollections.updateOne(
+    filter,
+    updatedDoc,
+    options
+  );
+  res.send(result);
+});
+
+
+/* footer area end */
 
 
   } finally {
