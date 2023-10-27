@@ -34,6 +34,10 @@ async function run() {
     const RoadMapOptionCollections = client.db("seoWebsite").collection("roadMap");
     const TeamOptionCollections = client.db("seoWebsite").collection("team");
     const TeamTitleOptionCollections = client.db("seoWebsite").collection("teamTitle");
+    const TestimonialOptionCollections = client.db("seoWebsite").collection("testimonials");
+    const TestimonialTitleOptionCollections = client.db("seoWebsite").collection("testimonialsTitle");
+    const FaqsOptionCollections = client.db("seoWebsite").collection("faqs");
+    const FaqsTitleCollections = client.db("seoWebsite").collection("faqsTitle");
 
     /* Seo site post */
 
@@ -636,16 +640,225 @@ app.put("/edit-team-title/:id", async (req, res) => {
 /* end */
 
 
+    /* testimonial */
+
+    app.post("/testimonial", async (req, res) => {
+      const testimonial = req.body;
+      const result = await TestimonialOptionCollections.insertOne(testimonial);
+      res.send(result);
+    });
+
+    app.get("/testimonials", async (req, res) => {
+      const query = {};
+      const cursor = TestimonialOptionCollections.find(query);
+      const testimonial = await cursor.toArray();
+      res.send(testimonial);
+    });
+    
+
+    app.get("/testimonial/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const testimonial = await TestimonialOptionCollections.findOne(query); // Use findOne to get a single testimonial
+      res.send(testimonial);
+    });
+    app.delete("/testimonial/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const result = await TestimonialOptionCollections.deleteOne(query); // Delete the document
+      if (result.deletedCount === 1) {
+        res.send("Testimonial deleted successfully");
+      } else {
+        res.status(404).send("Testimonial not found");
+      }
+    });
+    
+    
+
+    app.put("/testimonial/:id", async (req, res) => {
+      const id = req.params.id;
+      const testimonial = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          personName: testimonial.personName,
+          personTitle: testimonial.personTitle,
+          personImg: testimonial.personImg,
+          desc: testimonial.desc,
+        },
+      };
+
+      const result = await TestimonialOptionCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
+    /* testimonial */
+
+
+
+    /* testimonial title */
+
+    app.post("/testimonial-title", async (req, res) => {
+      const testimonialTitle = req.body;
+      const result = await TestimonialTitleOptionCollections.insertOne(testimonialTitle);
+      res.send(result);
+    });
+
+    app.get("/testimonials-title", async (req, res) => {
+      const query = {};
+      const cursor = TestimonialTitleOptionCollections.find(query);
+      const testimonialTitle = await cursor.toArray();
+      res.send(testimonialTitle);
+    });
+    
+
+    app.get("/testimonial-title/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const testimonialTitle = await TestimonialTitleOptionCollections.findOne(query); // Use findOne to get a single testimonial
+      res.send(testimonialTitle);
+    });
+   
+    
+    
+
+    app.put("/testimonial-title/:id", async (req, res) => {
+      const id = req.params.id;
+      const testimonialTitle = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          titleTopText: testimonialTitle.titleTopText,
+          titleOne: testimonialTitle.titleOne,
+          titleTwo: testimonialTitle.titleTwo,
+         
+        },
+      };
+
+      const result = await TestimonialTitleOptionCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
+    /* testimonial */
 
 
 
 
 
 
+    /* faqs */
+
+    app.post("/faq", async (req, res) => {
+      const faq = req.body;
+      const result = await FaqsOptionCollections.insertOne(faq);
+      res.send(result);
+    });
 
 
+    app.get("/faqs", async (req, res) => {
+      const query = {};
+      const cursor = FaqsOptionCollections.find(query);
+      const faqs = await cursor.toArray();
+      res.send(faqs);
+    });
+    
 
+    app.get("/faq/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const faq = await FaqsOptionCollections.findOne(query); // Use findOne to get a single testimonial
+      res.send(faq);
+    });
+    app.delete("/faq/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const faq = await FaqsOptionCollections.deleteOne(query); // Delete the document
+      if (faq.deletedCount === 1) {
+        res.send("Testimonial deleted successfully");
+      } else {
+        res.status(404).send("Testimonial not found");
+      }
+    });
+    
+    
 
+    app.put("/faq/:id", async (req, res) => {
+      const id = req.params.id;
+      const faq = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          answer: faq.answer,
+          question: faq.question,
+          
+        },
+      };
+
+      const result = await FaqsOptionCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
+/* title */
+    app.post("/faq-title", async (req, res) => {
+      const faq = req.body;
+      const result = await FaqsTitleCollections.insertOne(faq);
+      res.send(result);
+    });
+
+    app.get("/faqs-title", async (req, res) => {
+      const query = {};
+      const cursor = FaqsTitleCollections.find(query);
+      const faqs = await cursor.toArray();
+      res.send(faqs);
+    });
+    app.get("/faq-title/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const faq = await FaqsTitleCollections.findOne(query); // Use findOne to get a single testimonial
+      res.send(faq);
+    });
+
+    app.put("/faq-title/:id", async (req, res) => {
+      const id = req.params.id;
+      const faq = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          titleTopText: faq.titleTopText,
+          titleOne: faq.titleOne,
+          titleTwo: faq.titleTwo,
+          
+      
+          
+        },
+      };
+
+      const result = await FaqsTitleCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+    
+
+    /* faqs */
 
 
 
