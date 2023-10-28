@@ -40,6 +40,7 @@ async function run() {
     const FaqsTitleCollections = client.db("seoWebsite").collection("faqsTitle");
     const FooterCollections = client.db("seoWebsite").collection("footer");
     const FooterLinkCollections = client.db("seoWebsite").collection("footerLink");
+    const sliderCollections = client.db("seoWebsite").collection("slider");
 
     /* Seo site post */
 
@@ -971,6 +972,64 @@ app.put("/footer-link/:id", async (req, res) => {
 
 
 /* footer area end */
+
+
+    /* SliderCollections */
+
+    app.post("/slider", async (req, res) => {
+      const slider = req.body;
+      const result = await sliderCollections.insertOne(slider);
+      res.send(result);
+    });
+
+    app.get("/sliders", async (req, res) => {
+      const query = {};
+      const cursor = sliderCollections.find(query);
+      const slider = await cursor.toArray();
+      res.send(slider);
+    });
+    
+
+    app.get("/slider/:id", async (req, res) => {
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const slider = await sliderCollections.findOne(query); // Use findOne to get a single testimonial
+      res.send(slider);
+    });
+   
+    
+    
+
+    app.put("/slider/:id", async (req, res) => {
+      const id = req.params.id;
+      const sliderUpdate = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          sliderTitle: sliderUpdate.sliderTitle,
+          sliderDesc: sliderUpdate.sliderDesc,
+          sliderImg: sliderUpdate.sliderImg,
+
+
+          
+         
+        },
+      };
+
+      const result = await sliderCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
+    /* testimonial */
+
+
+
+
 
 
   } finally {
