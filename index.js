@@ -292,10 +292,10 @@ async function run() {
           const about = await cursor.toArray();
           res.send(about);
         });
-        app.get("/about/:id", async (req, res) => {
-          const query = {};
+               app.get("/about/:id", async (req, res) => {
+          const query = {}; 
           const cursor = AboutUsOptionCollections.find(query);
-          const about = await cursor.toArray();
+const about = await cursor.toArray();
           res.send(about);
         });
     
@@ -563,11 +563,12 @@ app.put("/edit-road/:id", async (req, res) => {
       res.send(team);
     });
     app.get("/team/:id", async (req, res) => {
-      const query = {};
-      const cursor = TeamOptionCollections.find(query);
-      const team = await cursor.toArray();
+      const id = req.params.id; // Get the ID from the URL
+      const query = { _id: new ObjectId(id) }; // Filter by ID
+      const team = await TeamOptionCollections.findOne(query); // Use findOne to get a single testimonial
       res.send(team);
     });
+    
 
     app.put("/team/:id", async (req, res) => {
       const id = req.params.id;
