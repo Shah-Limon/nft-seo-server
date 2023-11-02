@@ -48,6 +48,7 @@ async function run() {
     const TicketCollections = client.db("seoWebsite").collection("Ticket");
     const TicketReplyCollections = client.db("seoWebsite").collection("TicketReply");
     const newsLetterCollections = client.db("seoWebsite").collection("newsLetter");
+    const userCollection = client.db("seoWebsite").collection("users");
 
     /* Seo site post */
 
@@ -90,6 +91,8 @@ async function run() {
           backlinks: edit.backlinks,
           img: edit.img,
           pdfLink: edit.pdfLink,
+          auditStatus: edit.auditStatus,
+          
         },
       };
 
@@ -319,6 +322,76 @@ async function run() {
       );
       res.send(result);
     });
+    /*  */
+
+    /* User Manage */
+
+    app.post("/add-user", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
+    app.get("/users", async (req, res) => {
+      const query = {};
+      const cursor = userCollection.find(query);
+      const users = await cursor.toArray();
+      res.send(users);
+    });
+
+    app.get('/user', async (req, res) => {
+      const email = req.query.userEmail;
+      const query = { userEmail: email };
+      const cursor = userCollection.find(query);
+      const user = await cursor.toArray();
+      res.send(user);
+  });
+
+
+    app.get("/user/:id", async (req, res) => {
+      const query = {};
+      const cursor = userCollection.find(query);
+      const user = await cursor.toArray();
+      res.send(user);
+    });
+
+    app.put("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const userUpdate = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          userName: userUpdate.userName,
+          userEmail: userUpdate.userEmail,
+          userRole: userUpdate.userRole,
+        },
+      };
+
+      const result = await userCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+    app.delete("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+    
+      try {
+        const result = await userCollection.deleteOne(filter);
+        if (result.deletedCount === 1) {
+          res.status(200).json({ message: "User deleted successfully" });
+        } else {
+          res.status(404).json({ message: "User not found" });
+        }
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+      }
+    });
+    
 
     /* payment */
 
@@ -1259,13 +1332,13 @@ app.get("/ticket/:id", async (req, res) => {
 
 
 app.put("/ticket/:id", async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.id; 
   const ticket = req.body;
   const filter = { _id: new ObjectId(id) };
   const options = { upsert: true };
   const updatedDoc = {
     $set: {
-      titleTopText: ticket.titleTopText,
+      ticketStatus: ticket.ticketStatus,
              
     },
   };
