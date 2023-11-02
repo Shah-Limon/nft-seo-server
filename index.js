@@ -89,6 +89,7 @@ async function run() {
           ux: edit.ux,
           backlinks: edit.backlinks,
           img: edit.img,
+          pdfLink: edit.pdfLink,
         },
       };
 
@@ -1202,6 +1203,26 @@ app.put("/footer-link/:id", async (req, res) => {
       const query = { _id: new ObjectId(id) }; 
       const contact = await ContactMessageCollections.findOne(query); 
       res.send(contact);
+    });
+
+    app.put("/contact-message/:id", async (req, res) => {
+      const id = req.params.id;
+      const contact = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          messageStatus: contact.messageStatus,
+                 
+        },
+      };
+    
+      const result = await ContactMessageCollections.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
     });
 
 
