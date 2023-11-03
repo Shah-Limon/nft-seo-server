@@ -49,6 +49,7 @@ async function run() {
     const TicketReplyCollections = client.db("seoWebsite").collection("TicketReply");
     const newsLetterCollections = client.db("seoWebsite").collection("newsLetter");
     const userCollection = client.db("seoWebsite").collection("users");
+    const featurePageCollections = client.db("seoWebsite").collection("features");
 
     /* Seo site post */
 
@@ -1396,6 +1397,62 @@ app.get("/subscription-email/", async (req, res) => {
 
 
 
+/* feature Page */
+
+
+
+app.post("/add-feature", async (req, res) => {
+  const feature = req.body;
+  const result = await featurePageCollections.insertOne(feature);
+  res.send(result);
+});
+
+app.get("/features", async (req, res) => {
+  const query = {};
+  const cursor = featurePageCollections.find(query);
+  const feature = await cursor.toArray();
+  res.send(feature);
+});
+
+
+app.get("/feature/:id", async (req, res) => {
+  const id = req.params.id; 
+  const query = { _id: new ObjectId(id) }; 
+  const feature = await featurePageCollections.findOne(query); 
+  res.send(feature);
+});
+
+
+
+
+app.put("/feature/:id", async (req, res) => {
+  const id = req.params.id;
+  const feature = req.body;
+  const filter = { _id: new ObjectId(id) };
+  const options = { upsert: true };
+  const updatedDoc = {
+    $set: {
+     
+      topText: feature.topText,
+      title: feature.title,
+      subText: feature.subText,
+      featureTitle: feature.featureTitle,
+      featureImg: feature.featureImg,
+      featureDesc: feature.featureDesc,
+
+        
+    },
+  };
+
+  const result = await featurePageCollections.updateOne(
+    filter,
+    updatedDoc,
+    options
+  );
+  res.send(result);
+});
+
+/* contact */
 
 
 
