@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -50,6 +51,12 @@ async function run() {
     const newsLetterCollections = client.db("seoWebsite").collection("newsLetter");
     const userCollection = client.db("seoWebsite").collection("users");
     const featurePageCollections = client.db("seoWebsite").collection("features");
+
+
+
+
+
+
 
     /* Seo site post */
 
@@ -327,6 +334,8 @@ async function run() {
 
     /* User Manage */
 
+
+
     app.post("/add-user", async (req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
@@ -336,18 +345,9 @@ async function run() {
     app.get("/users", async (req, res) => {
       const query = {};
       const cursor = userCollection.find(query);
-      const users = await cursor.toArray();
-      res.send(users);
-    });
-
-    app.get('/user', async (req, res) => {
-      const email = req.query.userEmail;
-      const query = { userEmail: email };
-      const cursor = userCollection.find(query);
       const user = await cursor.toArray();
       res.send(user);
-  });
-
+    });
 
     app.get("/user/:id", async (req, res) => {
       const query = {};
@@ -355,6 +355,7 @@ async function run() {
       const user = await cursor.toArray();
       res.send(user);
     });
+
 
     app.put("/user/:id", async (req, res) => {
       const id = req.params.id;
